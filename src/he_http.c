@@ -40,7 +40,7 @@ void he_close_http_connection_with_message(he_t *he, const char *msg, const char
 	if (he->nc) {
 		if (!he_zstr(msg)) {
 			if (!he_zstr(body))
-				mg_printf(he->nc, "HTTP/1.1 %s\r\nContent-Length: %lu\r\nContent-Type: text/plain\r\n\r\n%s", msg, strlen(body), body);
+				mg_printf(he->nc, "HTTP/1.1 %s\r\nContent-Length: %zu\r\nContent-Type: text/plain\r\n\r\n%s", msg, strlen(body), body);
 			else
 				mg_printf(he->nc, "HTTP/1.1 %s\r\nContent-Length: 0\r\n\r\n", msg);
 		}
@@ -103,19 +103,25 @@ void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void 
 		case MG_EV_HTTP_REQUEST:
 			{
 				char this_uri[HE_BUFLEN] = { 0 };
+				char this_method[HE_BUFLEN] = { 0 };
 				uint32_t http_method = 0;
 
 				fprintif(HE_LOGLEVEL_2, "MG_EV_HTTP_REQUEST");
 
-				if (!m) {
+				if (!m || !m->method.p) {
 					fprintif(HE_LOGLEVEL_2, "Bad params, no HTTP context");
 					return;
 				}
 
-				fprintif(HE_LOGLEVEL_2, "HTTP message is:\nmessage: %s\nbody: %s\nmethod: %s\nuri: %s\nproto: %s", m->message.len ? m->message.p : NULL, m->body.len ? m->body.p : NULL, m->method.len ? m->method.p : NULL, m->uri.len ? m->uri.p : NULL, m->proto.len ? m->proto.p : NULL);
-				http_method = he_str_2_http_method(m->method.p);
+				strncpy(this_method, m->method.p, he_min(HE_BUFLEN, m->method.len));
+				this_method[HE_BUFLEN - 1] = '\0';
+
+				http_method = he_str_2_http_method(this_method);
 				if (http_method == HE_HTTP_METHOD_INVALID) {
-					fprintif(HE_LOGLEVEL_2, "HTTP method invalid (%s)", m->method.p);
+					//he_close_http_connection_with_message(he, "404 Method invalid", NULL);
+					he_close_http_connection_with_message(he, "200 OK", NULL);
+					//fprintif(HE_LOGLEVEL_2, "===HTTP method invalid (closed HTTP connection with error 404)");
+					fprintif(HE_LOGLEVEL_2, "===HTTP method invalid (though closed HTTP connection with 200 OK)");
 					return;
 				}
 

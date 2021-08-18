@@ -16,7 +16,7 @@ void hello_handler(he_t *he)
 
 int main(void)
 {
-	he_t *server = he_create(NULL);
+	he_t *server = he_create();
 	if (!server) {
 		return -1;
 	}

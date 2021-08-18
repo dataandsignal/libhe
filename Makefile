@@ -1,5 +1,5 @@
 CC				= gcc
-CFLAGS			= -c -fPIC -Wall -Wextra -Wfatal-errors -Wno-unused-function
+CFLAGS			= -c -fPIC -Wall -Wextra -Wfatal-errors -Wno-unused-function -DMG_ENABLE_SSL
 LDFLAGS      	= -shared
 SRCDIR			= src
 DEBUGOUTPUTDIR 	= build/debug

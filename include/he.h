@@ -75,8 +75,10 @@ uint8_t he_zstr(const char *s);
 
 he_status_t he_run(he_t *he);
 void he_destroy(he_t **he);
-he_t* he_create(he_options_t *options);
+he_t* he_create(void);
+void he_set_port(he_t *he, uint16_t port);
 void he_set_user_data(he_t *he, void *user_data);
+void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name);
 he_status_t he_register_get_handler(he_t *he, char *url, he_api_handler_t handler);
 he_status_t he_register_put_handler(he_t *he, char *url, he_api_handler_t handler);
 he_status_t he_register_post_handler(he_t *he, char *url, he_api_handler_t handler);

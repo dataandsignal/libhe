@@ -57,7 +57,7 @@ void he_destroy(he_t **he)
 	*he = NULL;
 }
 
-he_t* he_create(he_options_t *options)
+he_t* he_create(void)
 {
 	he_t *he = malloc(sizeof(*he));
 	if (!he) {
@@ -65,11 +65,7 @@ he_t* he_create(he_options_t *options)
 	}
 
 	memset(he, 0, sizeof(*he));
-
-	if (!options) {
-		options = &he_default_options;
-	}
-	memcpy(options, &he->options, sizeof(he->options));
+	memcpy(&he->options, &he_default_options, sizeof(he->options));
 
 	pthread_mutex_init(&he->big_fat_lock, NULL);
 	CD_INIT_LIST_HEAD(&he->api_bindings);
@@ -84,6 +80,34 @@ void he_set_user_data(he_t *he, void *user_data)
 	}
 
 	he->user_data = user_data;
+}
+
+void he_set_port(he_t *he, uint16_t port)
+{
+	if (!he) {
+		return;
+	}
+
+	he->options.port = port;
+}
+
+void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name)
+{
+	if (!he) {
+		return;
+	}
+
+	he->options.use_ssl = 1;
+
+	if (!he_zstr(ssl_key_name)) {
+		strncpy(he->options.ssl_key_name, ssl_key_name, HE_BUFLEN);
+		he->options.ssl_key_name[HE_BUFLEN -1] = '\0';
+	}
+
+	if (!he_zstr(ssl_cert_name)) {
+		strncpy(he->options.ssl_cert_name, ssl_cert_name, HE_BUFLEN);
+		he->options.ssl_cert_name[HE_BUFLEN -1] = '\0';
+	}
 }
 
 he_status_t he_run(he_t *he)

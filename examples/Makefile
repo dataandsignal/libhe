@@ -7,7 +7,7 @@ EXAMPLE_HTTP_GET_ENDPOINT_SOURCES	= http_get_endpoint.c
 EXAMPLE_HTTP_POST_ENDPOINT_SOURCES	= http_post_endpoint.c
 INCLUDES		= -I. -I../include
 INCLUDES		= -I./src -Iinclude -I/usr/local/include/he
-LIBS			= -lhe -lcjson -pthread
+LIBS			= -lhe -lcjson -lssl -pthread
 
 _EXAMPLE_HTTP_GET_ENDPOINT_OBJECTS		= $(EXAMPLE_HTTP_GET_ENDPOINT_SOURCES:.c=.o)
 EXAMPLE_HTTP_GET_ENDPOINT_DEBUGOBJECTS 		= $(patsubst src/%,$(DEBUGOUTPUTDIR)/%,$(_EXAMPLE_HTTP_GET_ENDPOINT_OBJECTS))
