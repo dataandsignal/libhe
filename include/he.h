@@ -7,7 +7,8 @@
 #define MG_ENABLE_SSL 1
 #include "mongoose.h"
 
-#define HE_DEFAULT_PORT 80
+#define HE_DEFAULT_HTTP_PORT 80
+#define HE_DEFAULT_HTTPS_PORT 443
 #define HE_BUFLEN 2000
 
 #define HE_HTTP_METHOD_INVALID (0u)

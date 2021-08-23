@@ -21,6 +21,9 @@ int main(void)
 		return -1;
 	}
 
+	// For SSL:
+	// he_set_ssl(server, ssl_key_name, ssl_cert_name);
+
 	he_register_get_handler(server, HELLO_URL, hello_handler);
 	he_run(server);
 

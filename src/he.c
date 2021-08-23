@@ -4,7 +4,7 @@
 int he_loglevel = HE_LOGLEVEL_0;
 
 he_options_t he_default_options = {
-	.port = HE_DEFAULT_PORT,
+	.port = 0,
 	.use_ssl = 0,
 	.ssl_key_name = { 0 },
 	.ssl_cert_name = { 0 }
@@ -143,7 +143,7 @@ he_status_t he_run(he_t *he)
 	mg_mgr_init(&mgr, NULL);
 
 	if (he->options.port == 0) {
-		he->options.port = HE_DEFAULT_PORT;
+		he->options.port = he->options.use_ssl ? HE_DEFAULT_HTTPS_PORT : HE_DEFAULT_HTTP_PORT;
 	}
 
 	snprintf(port, 100, ":%u", he->options.port); 

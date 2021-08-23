@@ -1,6 +1,6 @@
 # libhe
 
-This is a compact wrapper over [mongoose](https://github.com/cesanta/mongoose) that enables to create robust HTTP(s) endpoints easily.
+This is a compact wrapper over [mongoose](https://github.com/cesanta/mongoose) that enables to create simple and robust HTTP(s) endpoints easily.
 Basic GET and POST handler examples can be found in /examples folder.
 
 ## GET handler example
@@ -44,7 +44,7 @@ Some more details
 Output:
 
 ```
-$ ./httpendpoint
+$ ./httpgetendpoint
 src/he_http.c:78 "MG_EV_ACCEPT"
 src/he_http.c:83 "MG_EV_RECV..."
 src/he_http.c:90 "MG_EV_HTTP_REQUEST"
@@ -137,6 +137,25 @@ Test POST handler:
 ```
 $ curl --header "Content-Type: application/json" --request POST --data '{"username":"xyz","password":"xyz"}' http://localhost/api/v2/boom
 Your data is valid
+```
+
+## Options
+
+HTTPS
+
+For HTTPs use he_set_ssl() with private key and certificate:
+
+```
+	he_set_ssl(server, ssl_key_name, ssl_cert_name);
+```
+
+Port
+
+By defualt server will attempt to bind to port 80 for HTTP and 443 for HTTPS.
+To bind to different port use he_set_port():
+
+```
+	he_set_port(server, port);
 ```
 
 ## Deps
