@@ -7,11 +7,19 @@ RELEASEOUTPUTDIR	= build/release
 SOURCES			= src/mongoose.c src/he_api_binding.c src/he.c src/he_http.c
 INCLUDES		= -I./src -Iinclude -I/usr/local/include/cd
 LIBS			= -lcd -pthread
+DEPS			= libcd.so
 _OBJECTS		= $(SOURCES:.c=.o)
 DEBUGOBJECTS	= $(patsubst src/%,$(DEBUGOUTPUTDIR)/%,$(_OBJECTS))
 RELEASEOBJECTS	= $(patsubst src/%,$(RELEASEOUTPUTDIR)/%,$(_OBJECTS))
 DEBUGTARGET		= build/debug/libhe.so
 RELEASETARGET	= build/release/libhe.so
+
+dep := $(shell ldconfig && ldconfig -p | grep libcd.so)
+
+deps:
+ifndef dep
+$(error "libcd $(dep) is missing, please check Deps in README")
+endif
 
 debugprereqs:
 		mkdir -p $(DEBUGOUTPUTDIR)
@@ -23,19 +31,8 @@ install-prereqs:
 		mkdir -p /usr/local/include/he
 
 
-debug:	debugprereqs $(SOURCES) $(DEBUGTARGET)
-release:	releaseprereqs $(SOURCES) $(RELEASETARGET)
-
-test-debug:		debugall
-		cd test && make test-debug
-
-test-release:		releaseall
-		cd test && make test-release
-
-test:		test-release
-
-test-clean:
-		cd test && make clean
+debug:	debugprereqs $(SOURCES) deps $(DEBUGTARGET)
+release:	releaseprereqs $(SOURCES) deps $(RELEASETARGET)
 
 examples-debug:		debug install-debug
 		cd examples && make examples-debug
@@ -48,10 +45,10 @@ examples:		examples-release
 examples-clean:
 		cd examples && make clean
 
-$(DEBUGTARGET): $(DEBUGOBJECTS) 
+$(DEBUGTARGET): $(DEBUGOBJECTS)
 	$(CC) $(DEBUGOBJECTS) $(LIBS) -o $@ $(LDFLAGS)
 
-$(RELEASETARGET): $(RELEASEOBJECTS) 
+$(RELEASETARGET): $(RELEASEOBJECTS)
 	$(CC) $(RELEASEOBJECTS) $(LIBS) -o $@ $(LDFLAGS)
 
 $(DEBUGOUTPUTDIR)/%.o: CFLAGS += -g -ggdb3 -O0
@@ -86,4 +83,4 @@ clean:
 	sudo rm -rf $(DEBUGOBJECTS) $(DEBUGTARGET)
 	sudo rm -rf $(RELEASEOBJECTS) $(RELEASETARGET)
 
-clean-all: clean examples-clean test-clean
+clean-all: clean examples-clean

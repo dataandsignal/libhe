@@ -118,10 +118,8 @@ void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void 
 
 				http_method = he_str_2_http_method(this_method);
 				if (http_method == HE_HTTP_METHOD_INVALID) {
-					//he_close_http_connection_with_message(he, "404 Method invalid", NULL);
-					he_close_http_connection_with_message(he, "200 OK", NULL);
-					//fprintif(HE_LOGLEVEL_2, "===HTTP method invalid (closed HTTP connection with error 404)");
-					fprintif(HE_LOGLEVEL_2, "===HTTP method invalid (though closed HTTP connection with 200 OK)");
+					he_close_http_connection_with_message(he, "404 Method invalid", NULL);
+					fprintif(HE_LOGLEVEL_2, "===HTTP method invalid (closed HTTP connection with error 404)");
 					return;
 				}
 

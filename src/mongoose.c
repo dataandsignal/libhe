@@ -9328,7 +9328,7 @@ static void mg_send_file_data(struct mg_connection *nc, FILE *fp) {
 static void mg_do_ssi_include(struct mg_connection *nc, struct http_message *hm,
                               const char *ssi, char *tag, int include_level,
                               const struct mg_serve_http_opts *opts) {
-  char file_name[MG_MAX_PATH], path[MG_MAX_PATH], *p;
+  char file_name[MG_MAX_PATH], path[2*MG_MAX_PATH], *p;
   FILE *fp;
 
   /*

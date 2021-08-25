@@ -14,6 +14,10 @@ void boom_handler(he_t *he)
 	cJSON *json = NULL;
 	struct http_message *msg = he->http_msg;
 
+	// Retrieving user's data:
+	// my_t *my = (my_t*) he->user_data;
+
+
 	fprintif(HE_LOGLEVEL_1, "Handling HTTP POST request for %s", BOOM_URL);
 
 	if (!msg) {
@@ -69,6 +73,9 @@ int main(void)
 
 	// For SSL:
 	// he_set_ssl(server, ssl_key_name, ssl_cert_name);
+
+	// Passing user's data to callbacks:
+	// he_set_user_data(server, ptr);
 
 	he_register_post_handler(server, BOOM_URL, boom_handler);
 	he_run(server);

@@ -158,32 +158,81 @@ To bind to different port use he_set_port():
 	he_set_port(server, port);
 ```
 
+User's data
+
+Pass your data to callbacks:
+
+```
+	he_set_user_data(server, ptr);
+```
+
+Retrieve your data in callbacks:
+
+```
+	my_t *my = (my_t*) he->user_data;
+```
+
 ## Deps
 
 - [libcd](https://github.com/dataandsignal/libcd)
+- libssl-dev
 - [cjson](https://github.com/DaveGamble/cJSON) (POST handler example only)
 
 
 ## BUILD
 
-This builds on Linux Debian. make, make debug and make release produce shared library in build/debug or build/release folders.
+This builds on Linux Debian. Install deps before building.
+Makefile targets: 'make', 'make debug' and 'make release' produce shared library in build/debug or build/release folders.
+'make examples'/'make examples-release'/'make examples-debug' produces examples in examples/build/release or examples/build/debug folder.
+Debug targets require 'debug', default targets are relase, so for instance building and running debug version requires:
+
+Build and install debug versions
+
+```
+	make debug
+	make install-debug
+```
+
+Build and install in release mode
+
+```
+	make
+	make install
+
+or
+
+	make release
+	make install-release
+```
+
+Build examples in debug versions
+
+```
+	make examples-debug
+```
+
+Build examples in release mode
+
+```
+	make examples
+
+or
+
+	make examples-release 
+```
 
 ```
 make debug			-> for debug library build
 make release			-> for release library build
-make test-debug			-> for build and run of debug version of tests
-make test-release		-> for build and run of release version of tests
 make examples-debug		-> for build and run of debug version of examples
 make examples-release		-> for build and run of release version of examples
 
 make				-> same as make release
-make test			-> same as make test-release
 make examples			-> same as make examples-release
 
 make clean			-> remove library binaries
-make test-clean			-> remove test binaries
 make examples-clean		-> remove examples binaries
-make clean-all			-> remove library and test and examples binaries
+make clean-all			-> remove library and examples binaries
 
 make install-debug		-> install debug version of library to /lib
 make install-release		-> install release version of library to /lib
