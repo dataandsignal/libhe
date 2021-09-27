@@ -70,17 +70,61 @@ he_api_binding_t* he_api_binding_walk(struct cd_list_head *bindings, he_api_bind
 
 static he_api_binding_t* he_api_binding_find_by_url_pred(he_api_binding_t *binding, void *pred_obj)
 {
-	void *p = NULL;
 	const char *url = pred_obj;
+	char *u = NULL, *b = NULL, *up = NULL, *bp = NULL;
+	uint32_t u_len = 0, b_len = 0, up_len = 0, bp_len = 0;
 
 	if (!binding || !binding->url || !url) {
 		return NULL;
 	}
 
-	p = strstr(url, binding->url);
-	if (p && (p == url)) {
+	// Strip first '/' (if any) and last '/' if any and compare
+
+	u_len = strlen(url);
+	b_len = strlen(binding->url);
+	up = (char*) url;
+	bp = (char*) binding->url;
+
+	if ((u_len == 0) && (b_len == 0)) {
 		return binding;
 	}
+
+	if (u_len > 0) {
+		u = (url[0] == '/' ? strdup(url + 1) : strdup(url));
+		up = he_string_trim_whitespace(u);
+		up_len = strlen(u);
+		if (up_len > 0) {
+			if (up[up_len - 1] == '/') {
+				up[up_len - 1] = '\0';
+			}
+		}
+	}
+
+	if (b_len > 0) {
+		b = (binding->url[0] == '/' ? strdup(binding->url + 1) : strdup(binding->url));
+		bp = he_string_trim_whitespace(b);
+		bp_len = strlen(bp);
+		if (bp_len > 0) {
+			if (bp[bp_len - 1] == '/') {
+				bp[bp_len - 1] = '\0';
+			}
+		}
+	}
+
+	if ((up_len == 0) && (bp_len == 0)) {
+		if (u) free(u);
+		if (b) free(b);
+		return binding;
+	}
+
+	if (!strcmp(up, bp)) {
+		if (u) free(u);
+		if (b) free(b);
+		return binding;
+	}
+
+	if (u) free(u);
+	if (b) free(b);
 
 	return NULL;
 }

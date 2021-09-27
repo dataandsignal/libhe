@@ -29,6 +29,9 @@ int main(void)
 
 	// Passing user's data to callbacks:
 	// he_set_user_data(server, ptr);
+	//
+	// Set different port:
+	// he_set_port(server, 8088);
 
 	he_register_get_handler(server, HELLO_URL, hello_handler);
 	he_run(server);

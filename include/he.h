@@ -71,6 +71,7 @@ he_api_binding_t* he_api_binding_find_by_url_and_http_method_type(he_t *he, cons
 void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void *d);
 
 uint8_t he_zstr(const char *s);
+char* he_string_trim_whitespace(char *str);
 
 // Public API
 

@@ -3,6 +3,14 @@
 This is a compact wrapper over [mongoose](https://github.com/cesanta/mongoose) that enables to create simple and robust HTTP(s) endpoints easily.
 Basic GET and POST handler examples can be found in /examples folder.
 
+## URL matching
+
+URL of registered handler and request URL get truncated from first and last '/' (if any) before comparison. The rest of the string must match exactly.
+
+"/" will match "//", "/", ""
+
+"api" will match "/api/", "/api", "api/"
+
 ## GET handler example
 
 

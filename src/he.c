@@ -18,6 +18,32 @@ uint8_t he_zstr(const char *s)
 	return 0;
 }
 
+/*
+ * Trim leading white space and truncate string on first whitespace after non whitespace part.
+ */
+char* he_string_trim_whitespace(char *str)
+{
+  char *p;
+
+  // Trim leading space
+  while (isspace((unsigned char) *str)) str++;
+
+  p = str;
+
+  if (*str == 0) {
+    return p;
+  }
+
+  while (!isspace((unsigned char) *str) && *str != 0) str++;
+  if (*str == 0) {
+	  return p;
+  }
+
+  *str = 0;
+
+  return p;
+}
+
 void he_fprintf(char *fmt, ...)
 {
     va_list args;
