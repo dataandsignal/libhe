@@ -183,15 +183,18 @@ Retrieve your data in callbacks:
 ## Deps
 
 - [libcd](https://github.com/dataandsignal/libcd)
-- libssl-dev
-- [cjson](https://github.com/DaveGamble/cJSON) (POST handler example only)
+- libssl-dev (e.g. sudo apt install libssl-dev)
+- [cjson](https://github.com/DaveGamble/cJSON) (e.g. sudo apt install libcjson-dev)
 
 
 ## BUILD
 
 This builds on Linux Debian. Install deps before building.
+
 Makefile targets: 'make', 'make debug' and 'make release' produce shared library in build/debug or build/release folders.
+
 'make examples'/'make examples-release'/'make examples-debug' produces examples in examples/build/release or examples/build/debug folder.
+
 Debug targets require 'debug', default targets are relase, so for instance building and running debug version requires:
 
 Build and install debug versions

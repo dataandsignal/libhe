@@ -15,11 +15,19 @@ DEBUGTARGET		= build/debug/libhe.so
 RELEASETARGET	= build/release/libhe.so
 
 ldc := $(shell sudo ldconfig)
-dep := $(shell sudo ldconfig -p | grep libcd.so)
+depcd := $(shell sudo ldconfig -p | grep libcd.so)
+depcjson := $(shell sudo ldconfig -p | grep libcjson)
+depssl := $(shell sudo ldconfig -p | grep libssl)
 
 deps:
-ifndef dep
-$(error "libcd $(dep) is missing, please check Deps in README")
+ifndef depcd
+$(error "libcd $(depcd) is missing, please install libcd (https://github.com/dataandsignal/libcd)")
+endif
+ifndef depcjson
+$(error "libcjson $(depcjson) is missing, please install libcjson (sudo apt install libcjson-dev)")
+endif
+ifndef depssl
+$(error "libssl-dev $(depssl) is missing, please install libssl-dev (sudo apt install libssl-dev)")
 endif
 
 debugprereqs:

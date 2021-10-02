@@ -7,6 +7,13 @@
 #define MG_ENABLE_SSL 1
 #include "mongoose.h"
 
+#include <cjson/cJSON.h>
+
+// cJSON_ParseWithLength may be unavialable on older cJSON, so let's fix this
+#ifndef cJSON_ParseWithLength
+	#define cJSON_ParseWithLength(v, b) cJSON_ParseWithOpts((v), 0, 0)
+#endif
+
 #define HE_DEFAULT_HTTP_PORT 80
 #define HE_DEFAULT_HTTPS_PORT 443
 #define HE_BUFLEN 2000
@@ -72,6 +79,7 @@ void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void 
 
 uint8_t he_zstr(const char *s);
 char* he_string_trim_whitespace(char *str);
+
 
 // Public API
 

@@ -1,5 +1,4 @@
-#include "he.h"
-#include <cjson/cJSON.h>
+#include <he.h>
 
 
 #define BOOM_URL "/api/v2/boom"
