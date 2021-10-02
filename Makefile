@@ -14,7 +14,8 @@ RELEASEOBJECTS	= $(patsubst src/%,$(RELEASEOUTPUTDIR)/%,$(_OBJECTS))
 DEBUGTARGET		= build/debug/libhe.so
 RELEASETARGET	= build/release/libhe.so
 
-dep := $(shell ldconfig && ldconfig -p | grep libcd.so)
+ldc := $(shell sudo ldconfig)
+dep := $(shell sudo ldconfig -p | grep libcd.so)
 
 deps:
 ifndef dep
@@ -28,7 +29,7 @@ releaseprereqs:
 		mkdir -p $(RELEASEOUTPUTDIR)
 
 install-prereqs:
-		mkdir -p /usr/local/include/he
+		sudo mkdir -p /usr/local/include/he
 
 
 debug:	debugprereqs $(SOURCES) deps $(DEBUGTARGET)
@@ -78,9 +79,10 @@ install: install-release
 
 uninstall:
 	sudo rm /lib/libhe.so
+	sudo rm -rf /usr/local/include/he
 
 clean:
-	sudo rm -rf $(DEBUGOBJECTS) $(DEBUGTARGET)
-	sudo rm -rf $(RELEASEOBJECTS) $(RELEASETARGET)
+	rm -rf $(DEBUGOBJECTS) $(DEBUGTARGET)
+	rm -rf $(RELEASEOBJECTS) $(RELEASETARGET)
 
 clean-all: clean examples-clean
