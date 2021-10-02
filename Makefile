@@ -16,8 +16,8 @@ RELEASETARGET	= build/release/libhe.so
 
 ldc := $(shell sudo ldconfig)
 depcd := $(shell sudo ldconfig -p | grep libcd.so)
-depcjson := $(shell sudo ldconfig -p | grep libcjson)
-depssl := $(shell sudo ldconfig -p | grep libssl)
+depcjson := $(shell sudo dpkg -l | grep libcjson-dev)
+depssl := $(shell sudo dpkg -l | grep libssl-dev)
 
 deps:
 ifndef depcd
