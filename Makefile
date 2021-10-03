@@ -14,37 +14,18 @@ RELEASEOBJECTS	= $(patsubst src/%,$(RELEASEOUTPUTDIR)/%,$(_OBJECTS))
 DEBUGTARGET		= build/debug/libhe.so
 RELEASETARGET	= build/release/libhe.so
 
-ldc := $(shell sudo ldconfig)
-depcd := $(shell sudo ldconfig -p | grep libcd.so)
-depcjson1 := $(shell sudo dpkg -l | grep libcjson-dev)
-depcjson2 := $(shell sudo ldconfig -p | grep libcjson)
-depssl1 := $(shell sudo dpkg -l | grep libssl-dev)
-depssl2 := $(shell sudo ldconfig -p | grep libssl)
 
 deps:
-ifndef depcd
-	$(error "libcd $(depcd) is missing, please install libcd (https://github.com/dataandsignal/libcd)")
-endif
-depcjson :=
-ifdef depcjson1
-	depcjson := 1
-endif
-ifdef depcjson2
-	depcjson := 2
-endif
-ifndef depcjson
-	$(error "libcjson $(depcjson) is missing, please install libcjson (sudo apt install libcjson-dev)")
-endif
-depssl :=
-ifdef depssl1
-	depssl := 1
-endif
-ifdef depssl2
-	depssl := 2
-endif
-ifndef depssl
-	$(error "libssl-dev $(depssl) is missing, please install libssl-dev (sudo apt install libssl-dev)")
-endif
+	$(eval depcjson := $(shell sudo dpkg -l | grep libcjson-dev))
+	$(eval depcjson := $(if $(depcjson), $(depcjson), $(shell sudo ldconfig -p | grep libcjson)))
+	$(if $(depcjson), , $(error "libcjson is missing, please install libcjson (sudo apt install libcjson-dev)"))
+
+	$(eval depssl := $(shell sudo dpkg -l | grep libssl-dev))
+	$(eval depssl := $(if $(depssl), $(depssl), $(shell sudo ldconfig -p | grep libssl-dev)))
+	$(if $(depssl), , $(error "libssl-dev is missing, please install libssl-dev (sudo apt install libssl-dev)"))
+
+	$(eval lcd := $(shell sudo ldconfig -p | grep libcd.so))
+	$(if $(lcd), , $(error "libcd is missing, please install libcd (https://github.com/dataandsignal/libcd)"))
 
 debugprereqs:
 		mkdir -p $(DEBUGOUTPUTDIR)
