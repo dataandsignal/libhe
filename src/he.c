@@ -117,6 +117,13 @@ void he_set_port(he_t *he, uint16_t port)
 	he->options.port = port;
 }
 
+int he_set_signal_handler(int signo, he_sig_handler_t sig_handler)
+{
+	if (signal(signo, sig_handler) == SIG_ERR)
+		return -1;
+	return 0;
+}
+
 void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name)
 {
 	if (!he) {

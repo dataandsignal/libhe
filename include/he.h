@@ -30,6 +30,9 @@
 #define HE_LOGLEVEL_2 2
 #define HE_LOGLEVEL_3 3
 
+
+typedef void (*he_sig_handler_t)(int signo);
+
 typedef enum he_status_e {
 	HE_STATUS_OK,
 	HE_STATUS_TERM,
@@ -88,6 +91,7 @@ void he_destroy(he_t **he);
 he_t* he_create(void);
 void he_set_port(he_t *he, uint16_t port);
 void he_set_user_data(he_t *he, void *user_data);
+int he_set_signal_handler(int signo, he_sig_handler_t sig_handler);
 void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name);
 he_status_t he_register_get_handler(he_t *he, char *url, he_api_handler_t handler);
 he_status_t he_register_put_handler(he_t *he, char *url, he_api_handler_t handler);
