@@ -3,6 +3,26 @@
 This is a compact wrapper over [mongoose](https://github.com/cesanta/mongoose) that enables to create simple and robust HTTP(s) endpoints easily.
 Basic GET and POST handler examples can be found in /examples folder.
 
+
+## Quick setup
+
+```
+git clone https://github.com/dataandsignal/libhe.git
+cd libhe
+make
+make install
+make examples
+```
+
+Tested on Debian 10 (buster):
+
+```
+image: debian-10.10.0-amd64-netinst.iso
+kernel: Linux buster 4.19.0-17-amd64 #1 SMP Debian 4.19.194-3 (2021-07-18) x86_64 GNU/Linux
+platform: VirtualBox
+```
+
+
 ## URL matching
 
 URL of registered handler and request URL get truncated from first and last '/' (if any) before comparison. The rest of the string must match exactly.
@@ -10,6 +30,13 @@ URL of registered handler and request URL get truncated from first and last '/' 
 "/" will match "//", "/", ""
 
 "api" will match "/api/", "/api", "api/"
+
+
+## Examples
+
+
+Example GET and POST handler is availeble in /examples folder (file http_get_endpoint.c and file http_post_endpoint.c). Compile it with 'make examples' (or make examples-debug).
+
 
 ## GET handler example
 
@@ -60,6 +87,7 @@ src/he_http.c:97 "Searching handler for: /api/v2/hello"
 src/he_http.c:106 "-> Handler found"
 http_endpoint.c:12 "Handling HTTP GET request for /api/v2/hello"
 ```
+
 
 ## POST handler example
 
