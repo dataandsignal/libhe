@@ -251,3 +251,11 @@ make install			-> same as make install-release
 
 make uninstall			-> remove library from /lib
 ```
+
+
+## Contribute
+
+In case of any issues, please submit them [here](https://github.com/dataandsignal/libhe/issues).
+
+All contributions are welcome, please submit PRs [here](https://github.com/dataandsignal/libhe/pulls).
+
