@@ -7,7 +7,6 @@ RELEASEOUTPUTDIR	= build/release
 SOURCES			= src/mongoose.c src/he_api_binding.c src/he.c src/he_http.c
 INCLUDES		= -I./src -Iinclude -I/usr/local/include/cd
 LIBS			= -lcd -pthread
-DEPS			= libcd.so
 _OBJECTS		= $(SOURCES:.c=.o)
 DEBUGOBJECTS	= $(patsubst src/%,$(DEBUGOUTPUTDIR)/%,$(_OBJECTS))
 RELEASEOBJECTS	= $(patsubst src/%,$(RELEASEOUTPUTDIR)/%,$(_OBJECTS))
