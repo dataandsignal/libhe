@@ -36,6 +36,9 @@ releaseprereqs:
 install-prereqs:
 		sudo mkdir -p /usr/local/include/he
 
+install-post:
+	$(eval ldconf := $(shell sudo which ldconfig))
+	$(if $(ldconf), $(shell sudo ldconfig), $(shell echo "Warning: no ldconfig on this system (make sure your linker is updated with libhe)"))
 
 debug:	CFLAGS += -g -ggdb3 -O0
 debug:	debugprereqs $(SOURCES) deps $(DEBUGTARGET)
@@ -78,15 +81,18 @@ install-headers: install-prereqs include/he.h
 
 install-debug: $(DEBUGTARGET) install-headers
 	sudo cp $(DEBUGTARGET) /lib/
+	make install-post
 
 install-release: $(RELEASETARGET) install-headers
 	sudo cp $(RELEASETARGET) /lib/
+	make install-post
 
 install: install-release
 
 uninstall:
 	sudo rm /lib/libhe.so
 	sudo rm -rf /usr/local/include/he
+	make install-post
 
 clean:
 	rm -rf $(DEBUGOBJECTS) $(DEBUGTARGET)
