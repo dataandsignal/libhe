@@ -77,6 +77,9 @@ void he_destroy(he_t **he)
 		return;
 	}
 
+	// It cannot be in a poll loop anymore, he_stop() (if he is running in different thread) or he->stop = 1 (if from signal handler running in same thread) must be executed before he_destroy()
+	mg_mgr_free(&(*he)->mgr);
+
 	he_remove_api_bindings(*he);
 	pthread_mutex_destroy(&(*he)->big_fat_lock);
 	free(*he);
@@ -117,13 +120,6 @@ void he_set_port(he_t *he, uint16_t port)
 	he->options.port = port;
 }
 
-int he_set_signal_handler(int signo, he_sig_handler_t sig_handler)
-{
-	if (signal(signo, sig_handler) == SIG_ERR)
-		return -1;
-	return 0;
-}
-
 void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name)
 {
 	if (!he) {
@@ -145,7 +141,6 @@ void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name)
 
 he_status_t he_run(he_t *he)
 {
-	struct mg_mgr mgr = { 0 };
 	struct mg_connection *nc = NULL;
 	char port[100] = { 0 };
 	struct mg_bind_opts bopts = { 0 };
@@ -173,14 +168,14 @@ he_status_t he_run(he_t *he)
 		fprintif(HE_LOGLEVEL_1, "Using HTTPS with cert (%s) and key (%s)...", bopts.ssl_cert, bopts.ssl_key);
 	}
 
-	mg_mgr_init(&mgr, NULL);
+	mg_mgr_init(&he->mgr, NULL);
 
 	if (he->options.port == 0) {
 		he->options.port = he->options.use_ssl ? HE_DEFAULT_HTTPS_PORT : HE_DEFAULT_HTTP_PORT;
 	}
 
 	snprintf(port, 100, ":%u", he->options.port); 
-	nc = mg_bind_opt(&mgr, port, he_super_event_handler, he, bopts);
+	nc = mg_bind_opt(&he->mgr, port, he_super_event_handler, he, bopts);
 	if (!nc) {
 		fprintif(HE_LOGLEVEL_1, "Cannnot bind to port %u", he->options.port);
 		return HE_STATUS_TERM;
@@ -189,11 +184,33 @@ he_status_t he_run(he_t *he)
 	mg_set_protocol_http_websocket(nc);
 
 	for (;;) {
-		mg_mgr_poll(&mgr, 100);
+
+		pthread_mutex_lock(&he->big_fat_lock);
+
+		if (he->stop) {
+			pthread_mutex_unlock(&he->big_fat_lock);
+			goto done;
+		}
+
+		mg_mgr_poll(&he->mgr, 100);
+
+		pthread_mutex_unlock(&he->big_fat_lock);
 	}
 
-	he_remove_api_bindings(he);
-	mg_mgr_free(&mgr);
+done:
 
 	return HE_STATUS_OK;
+}
+
+/**
+ * Stop he from other thread.
+ */
+void he_stop(he_t *he)
+{
+	if (!he)
+		return;
+
+	pthread_mutex_lock(&he->big_fat_lock);
+	he->stop = 1;
+	pthread_mutex_unlock(&he->big_fat_lock);
 }

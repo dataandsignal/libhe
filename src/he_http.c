@@ -71,8 +71,6 @@ void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void 
 	char addr[32] = { 0 };
 
 
-	pthread_mutex_lock(&he->big_fat_lock);
-
 	if (!he) {
 		fprintif(HE_LOGLEVEL_2, "Bad params");
 		goto exit;
@@ -156,8 +154,6 @@ void he_super_event_handler(struct mg_connection *nc, int event, void *hm, void 
 
 exit:
 
-	pthread_mutex_unlock(&he->big_fat_lock);
-
 	return;
 }
 
@@ -174,7 +170,10 @@ static he_status_t he_register_handler_ex(he_t *he, char *url, he_api_handler_t 
 		return HE_STATUS_TERM;
 	}
 
+	pthread_mutex_lock(&he->big_fat_lock);
 	he_api_binding_add(he, binding);
+	pthread_mutex_unlock(&he->big_fat_lock);
+
 	return HE_STATUS_OK;
 }
 

@@ -46,12 +46,14 @@ typedef struct he_options_s {
 } he_options_t;
 
 typedef struct he_s {
+	struct mg_mgr mgr;
 	he_options_t		options;
 	struct cd_list_head	api_bindings;
 	pthread_mutex_t big_fat_lock;
 	struct mg_connection *nc;
 	struct http_message *http_msg;
 	void *user_data;
+	uint8_t stop;
 } he_t;
 
 typedef void he_api_handler_t(he_t *he);
@@ -87,11 +89,11 @@ char* he_string_trim_whitespace(char *str);
 // Public API
 
 he_status_t he_run(he_t *he);
+void he_stop(he_t *he);
 void he_destroy(he_t **he);
 he_t* he_create(void);
 void he_set_port(he_t *he, uint16_t port);
 void he_set_user_data(he_t *he, void *user_data);
-int he_set_signal_handler(int signo, he_sig_handler_t sig_handler);
 void he_set_ssl(he_t *he, char *ssl_key_name, char *ssl_cert_name);
 he_status_t he_register_get_handler(he_t *he, char *url, he_api_handler_t handler);
 he_status_t he_register_put_handler(he_t *he, char *url, he_api_handler_t handler);
