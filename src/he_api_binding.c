@@ -91,6 +91,9 @@ static he_api_binding_t* he_api_binding_find_by_url_pred(he_api_binding_t *bindi
 
 	if (u_len > 0) {
 		u = (url[0] == '/' ? strdup(url + 1) : strdup(url));
+		if ((up = strchr(u, '?')) != NULL) {
+			*up = '\0';
+		}
 		up = he_string_trim_whitespace(u);
 		up_len = strlen(u);
 		if (up_len > 0) {
@@ -102,6 +105,9 @@ static he_api_binding_t* he_api_binding_find_by_url_pred(he_api_binding_t *bindi
 
 	if (b_len > 0) {
 		b = (binding->url[0] == '/' ? strdup(binding->url + 1) : strdup(binding->url));
+		if ((bp = strchr(b, '?')) != NULL) {
+			*bp = '\0';
+		}
 		bp = he_string_trim_whitespace(b);
 		bp_len = strlen(bp);
 		if (bp_len > 0) {
